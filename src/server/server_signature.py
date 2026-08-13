@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 from sys import stderr
 import socket
@@ -93,7 +95,15 @@ def main():
 
                 # Receive m' (sent as ASCII from the client)
 
-                data = conn.recv(4096).decode('utf-8').strip()
+                chunks = []
+                while True:
+                    chunk = conn.recv(4096)
+                    if not chunk:  # shutdown received from Client
+                        break
+                    chunks.append(chunk)
+
+                data = b"".join(chunks).decode('utf-8').strip()
+
 
                 if data:
                     m_prime = int(data)
