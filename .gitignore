@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+src/server/server_key.pub
+src/server/server_key
+src/client/firma_modificada.txt
+src/client/firma.txt
+src/client/fichero_original
