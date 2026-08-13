@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
+from pathlib import Path
 import sys
 import socket
 import math
 import secrets
 
+# Add the parent directory (src) to sys.path for common folder
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 from common.crypto_utils import compute_file_hash, load_public_key
 
 
