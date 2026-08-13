@@ -1,10 +1,11 @@
-import os
+#!/usr/bin/env python3
+
 import sys
 import socket
 import math
 import secrets
-from cryptography.hazmat.primitives import serialization, hashes
-from cryptography.hazmat.primitives.asymmetric import rsa
+
+from common.crypto_utils import compute_file_hash, load_public_key
 
 
 HOST = '127.0.0.1'
@@ -14,22 +15,6 @@ PORT = 65432
 # ----------------------------------------------------------------------
 # FILE HASHING & KEY LOADING
 # ----------------------------------------------------------------------
-
-# SHA-256
-def compute_file_hash(filepath) -> int:
-    digest = hashes.Hash(hashes.SHA256())
-    with open(filepath, "rb") as f:
-        while chunk := f.read(4096):
-            digest.update(chunk)
-    hash_bytes = digest.finalize()
-    return int.from_bytes(hash_bytes, byteorder='big')
-
-
-def load_public_key(pub_key_path) -> tuple[int, int]:
-    with open(pub_key_path, "rb") as f:
-        public_key = serialization.load_pem_public_key(f.read())
-    pub_numbers = public_key.public_numbers()
-    return pub_numbers.n, pub_numbers.e
 
 def generate_blinding_factor(n) -> int:
     # Generates a random secret blinding factor (k) coprime to n
@@ -45,7 +30,7 @@ def generate_blinding_factor(n) -> int:
 
 def main():
     if len(sys.argv) != 3:
-        print("Usage: python3 client_signature.py <fichero_original> <server_key.pub>", file=sys.stderr)
+        print("Error. Usage: python3 client_signature.py <original_file> <server_key.pub>", file=sys.stderr)
         sys.exit(1)
 
     file_path = sys.argv[1]
